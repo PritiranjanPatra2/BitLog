@@ -23,6 +23,9 @@ app.use(cors({origin:allowedOrigins,credentials:true}))
 app.use('/api/user',userRouter)
 app.use('/api/user/post',postRouter);
 app.use('/api/user/comment',commentRouter)
+app.get('/',(req,res)=>{
+  res.send('Server is running')
+})
 await connectDb();
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`);
