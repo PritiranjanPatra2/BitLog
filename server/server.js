@@ -10,6 +10,7 @@ import cors from 'cors'
 
 const allowedOrigins=[
   'http://localhost:5173',
+  'https://bit-log-pp.vercel.app'
 ]
 
 const app = express();
