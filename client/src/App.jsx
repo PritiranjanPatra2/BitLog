@@ -8,6 +8,7 @@ import { useAppContext } from "./contexts/AppContext";
 import AddPost from "./components/AddPost";
 import Contact from "./components/Contact";
 import UserProfile from "./components/UserProfile";
+import SinglePost from "./components/SinglePost";
 
 function App() {
   const { user } = useAppContext();
@@ -21,6 +22,7 @@ function App() {
         {user && <Route path="/create" element={<AddPost />} />}
         <Route path="/contact" element={<Contact />} />
         <Route path="/user/:id" element={<UserProfile />} />
+        <Route path="/post/:id" element ={<SinglePost/>}/>
       </Routes>
       <Footer />
     </>

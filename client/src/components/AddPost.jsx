@@ -3,7 +3,7 @@ import { useAppContext } from "../contexts/AppContext";
 import toast from "react-hot-toast";
 
 const AddPost = () => {
-  const { axios, navigate } = useAppContext();
+  const { axios, navigate,fetchBlogs } = useAppContext();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ const AddPost = () => {
 
       if (data.success) {
         console.log(data);
-        
+        fetchBlogs();
         toast.success("Post added successfully");
         navigate("/"); 
       } else {

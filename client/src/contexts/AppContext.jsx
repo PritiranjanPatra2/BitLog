@@ -14,6 +14,7 @@ export const AppContextProvider = ({ children }) => {
   const [showUserLogin, setShowUserLogin] = useState(false);
   const [allUser,setAllUser]=useState([]);
   const [blogs,setBlogs]=useState([]);
+  const [search,setSearch]=useState("");
 
   const fetchUser = async () => {
     try {
@@ -76,7 +77,12 @@ export const AppContextProvider = ({ children }) => {
     allUser,
     setAllUser,
     blogs,
-    setBlogs
+    setBlogs,
+    search,
+    setSearch,
+    fetchBlogs,
+    fetchAllUser,
+    fetchUser
   };
 
   return (

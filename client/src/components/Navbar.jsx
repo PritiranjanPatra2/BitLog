@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { navigate, user, setUser, axios } = useAppContext();
+  const { navigate, user,fetchBlogs,fetchUser, setUser, axios } = useAppContext();
 
   const handleLogout = async () => {
     try {

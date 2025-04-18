@@ -212,8 +212,10 @@ export const deletePost = async (req, res) => {
         });
       }
   
-      // Get posts by the user
-      const posts = await Post.find({ author: id }).sort({ createdAt: -1 });
+      // Get posts by the user and populate the author's name
+      const posts = await Post.find({ author: id })
+        .populate("author", "name")
+        .sort({ createdAt: -1 });
   
       res.status(200).json({
         success: true,
@@ -229,5 +231,6 @@ export const deletePost = async (req, res) => {
       });
     }
   };
+  
   
   

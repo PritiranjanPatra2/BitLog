@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaRegHeart, FaRegCommentDots } from 'react-icons/fa';
 import { useAppContext } from '../contexts/AppContext';
 
 const BlogCard = ({ post }) => {
-  const {axios}=useAppContext()
+  const { axios, user, navigate } = useAppContext();
   const {
     _id,
     title,
@@ -15,7 +15,7 @@ const BlogCard = ({ post }) => {
   } = post;
 
   const [likeCount, setLikeCount] = useState(likes.length);
-  const [hasLiked, setHasLiked] = useState(likes.includes('user-id'));
+  const [hasLiked, setHasLiked] = useState(user && likes.includes(user._id));
   const [commentList, setCommentList] = useState([]);
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
@@ -60,13 +60,32 @@ const BlogCard = ({ post }) => {
         postId: _id,
       });
       if (res.data.success) {
-        setCommentList([...commentList, res.data.data]);
+        const commentWithUser = {
+          ...res.data.data,
+          user: {
+            name: user?.name || 'You',
+          },
+        };
+        setCommentList([...commentList, commentWithUser]);
         setNewComment('');
       }
     } catch (error) {
       console.error('Error adding comment:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const likeMessage = () => {
+    if (hasLiked) {
+      const othersCount = likeCount - 1;
+      if (othersCount > 0) {
+        return `You and ${othersCount} other${othersCount > 1 ? 's' : ''} liked this`;
+      } else {
+        return 'You liked this';
+      }
+    } else {
+      return `${likeCount} like${likeCount !== 1 ? 's' : ''}`;
     }
   };
 
@@ -84,7 +103,7 @@ const BlogCard = ({ post }) => {
             onClick={addLike}
           >
             <FaRegHeart />
-            <span>{likeCount}</span>
+            <span>{likeMessage()}</span>
           </div>
           <div
             className="flex items-center gap-1 hover:text-blue-500 cursor-pointer"
@@ -100,11 +119,10 @@ const BlogCard = ({ post }) => {
           <p>{date}</p>
         </div>
 
-        <button className="text-indigo-600 text-sm font-medium hover:underline mt-2 w-fit">
+        <button onClick={()=>navigate(`/post/${_id}`)} className="text-indigo-600 text-sm font-medium hover:underline mt-2 w-fit">
           Read more →
         </button>
 
-        
         {showComments && (
           <div className="mt-4 space-y-3">
             <input
