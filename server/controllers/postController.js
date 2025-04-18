@@ -1,20 +1,23 @@
 import Post from "../models/Post.js";
 
-export const getPosts = async (req,res) => {
+export const getPosts = async (req, res) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 }).populate('comments');
+        const posts = await Post.find()
+            .sort({ createdAt: -1 })
+            .populate('author', 'name') 
+            .populate('comments');
         res.json({
-            success:true,
-            data:posts
-        })
+            success: true,
+            data: posts
+        });
     } catch (error) {
         res.json({
-            success:false,
-            message:error.message
-        })
-        
+            success: false,
+            message: error.message
+        });
     }
-}
+};
+
 export const getSinglePost=async (req,res)=>{
     try {
         const {id}=req.params;

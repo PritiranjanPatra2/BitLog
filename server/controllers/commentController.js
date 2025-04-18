@@ -42,25 +42,32 @@ export const AddComment = async (req, res) => {
   }
 };
 
- 
-export const showComments=async (req,res)=>{
-    try {
-        const {postId}=req.params;
-        const post=await Post.findById(postId).populate('comments').exec();
-        res.json({
-            success:true,
-            data:post.comments
-        })
+export const showComments = async (req, res) => {
+  try {
+      const { postId } = req.params;
+      const post = await Post.findById(postId)
+          .populate({
+              path: 'comments',
+              populate: {
+                  path: 'user',
+                  select: 'name', // Only fetch the name of the user
+              }
+          });
 
-    } catch (error) {
-        console.error("Error fetching comments:", error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch comments",
-        })
-        
-    }
-}
+      res.json({
+          success: true,
+          data: post.comments
+      });
+
+  } catch (error) {
+      console.error("Error fetching comments:", error);
+      res.status(500).json({
+          success: false,
+          message: "Failed to fetch comments",
+      });
+  }
+};
+
 export const likePost = async (req, res) => {
     const { postId } = req.body;
     const { userId } = req;

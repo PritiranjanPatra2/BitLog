@@ -7,6 +7,7 @@ function Login() {
   const [state, setState] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [bio,setBio]=useState("");
   const [password, setPassword] = useState("");
   const onSubmitHandler = async (e) => {
     try {
@@ -14,6 +15,7 @@ function Login() {
       const { data } = await axios.post(`/api/user/${state}`, {
         name: name,
         email: email,
+        bio:bio,
         password: password,
       });
       console.log(name, email, password);
@@ -57,8 +59,20 @@ function Login() {
               type="text"
               required
             />
+             <p>Bio</p>
+          <input
+            onChange={(e) => setBio(e.target.value)}
+            value={bio}
+            placeholder="type here"
+            className="border border-gray-200 rounded w-full p-2 mt-1 outline-black"
+            type="text"
+            required
+          />
           </div>
+          
+          
         )}
+        
         <div className="w-full ">
           <p>Email</p>
           <input

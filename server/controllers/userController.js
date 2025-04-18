@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import jwt from 'jsonwebtoken'
 export const register =async (req,res)=>{
-    const {name,email,password}=req.body;
+    const {name,email,password,bio}=req.body;
     const existingUser=await User.findOne({email});
     if(existingUser){
         return res.status(400).json({
@@ -9,7 +9,7 @@ export const register =async (req,res)=>{
             message:"Email already in use"
         });
     }
-    const user=new User({name,email,password});
+    const user=new User({name,email,password,bio});
     await user.save();
     const token =jwt.sign({id:user._id},'xxxxx',{
         expiresIn:'1h'
