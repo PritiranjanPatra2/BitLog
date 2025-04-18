@@ -32,7 +32,7 @@ const Navbar = () => {
             B
           </div>
           <span className="text-xl font-semibold text-black hover:text-black">
-            Bitlog
+            BitLog
           </span>
         </div>
       </Link>

@@ -29,12 +29,12 @@ const Footer = () => {
             <div className="w-9 h-9 bg-black text-white font-bold rounded flex items-center justify-center text-lg">
               B
             </div>
-            <span className="text-xl font-semibold text-black">Bitlog</span>
+            <span className="text-xl font-semibold text-black">BitLog</span>
           </div>
 
           {/* Blog Description */}
           <p className="max-w-[420px] mt-6 text-sm leading-relaxed text-gray-600">
-            Bitlog is your daily dose of tech insights, coding tutorials, and
+            BitLog is your daily dose of tech insights, coding tutorials, and
             digital stories. Whether you're a developer, designer, or digital
             explorer, our blog brings the latest and greatest directly to you.
           </p>

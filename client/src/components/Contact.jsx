@@ -39,7 +39,7 @@ function Contact() {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <form
-        className="flex flex-col items-center text-sm"
+        className="flex flex-col items-center text-sm mt-16"
         onSubmit={handleSubmit}
       >
         <p className="text-lg text-primary font-medium pb-2 mt-16">
