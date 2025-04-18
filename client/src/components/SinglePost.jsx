@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppContext } from '../contexts/AppContext';
+import toast from 'react-hot-toast';
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -10,6 +11,7 @@ const SinglePost = () => {
   const [commentList, setCommentList] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingComments, setLoadingComments] = useState(true);
 
   const fetchPost = async () => {
     try {
@@ -19,6 +21,7 @@ const SinglePost = () => {
       }
     } catch (err) {
       console.error('Error fetching post:', err.message);
+      toast.error('Error fetching post.');
     }
   };
 
@@ -30,6 +33,9 @@ const SinglePost = () => {
       }
     } catch (err) {
       console.error('Error fetching comments:', err.message);
+      toast.error('Error fetching comments.');
+    } finally {
+      setLoadingComments(false);
     }
   };
 
@@ -50,9 +56,12 @@ const SinglePost = () => {
         };
         setCommentList([...commentList, commentWithUser]);
         setNewComment('');
+      } else {
+        toast.error('Failed to add comment.');
       }
     } catch (err) {
       console.error('Error adding comment:', err.message);
+      toast.error('Error adding comment.');
     } finally {
       setIsSubmitting(false);
     }
@@ -63,7 +72,7 @@ const SinglePost = () => {
     fetchComments();
   }, [id]);
 
-  if (!post) return <div className="text-center py-10">Loading...</div>;
+  if (!post) return <div className="text-center py-10">Loading post...</div>;
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 px-6 py-10 max-w-7xl mx-auto mt-16">
@@ -86,7 +95,9 @@ const SinglePost = () => {
         <h2 className="text-xl font-semibold mb-4">Comments</h2>
 
         <div className="space-y-2 mb-4 max-h-80 overflow-y-auto pr-2">
-          {commentList.length === 0 ? (
+          {loadingComments ? (
+            <p className="text-gray-500 text-sm">Loading comments...</p>
+          ) : commentList.length === 0 ? (
             <p className="text-gray-500 text-sm">No comments yet.</p>
           ) : (
             commentList.map((comment, i) => (
@@ -105,6 +116,7 @@ const SinglePost = () => {
             onChange={(e) => setNewComment(e.target.value)}
             className="border border-gray-300 rounded px-3 py-2 text-sm w-full"
             placeholder="Add a comment..."
+            disabled={isSubmitting}
           />
           <button
             onClick={handleAddComment}

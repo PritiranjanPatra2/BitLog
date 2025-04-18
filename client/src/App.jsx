@@ -9,12 +9,14 @@ import AddPost from "./components/AddPost";
 import Contact from "./components/Contact";
 import UserProfile from "./components/UserProfile";
 import SinglePost from "./components/SinglePost";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { user } = useAppContext();
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

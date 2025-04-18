@@ -27,13 +27,24 @@ function UserProfile() {
     fetchUserProfile();
   }, [id]);
 
-  // If no profile, generate a random profile for demo purposes
+  // Simulate random profile data if there's an error
   if (loading) {
     return <div>Loading...</div>;
   }
 
   if (error) {
-    // Simulate random user profile if there's an error
+    return (
+      <div className="container mx-auto p-5 mt-16">
+        <div className="text-center text-red-500">{error}</div>
+        <button onClick={() => window.location.reload()} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  // If profile is empty, simulate data for demonstration
+  if (!profile) {
     setProfile({
       name: `User ${Math.floor(Math.random() * 1000)}`,
       bio: `Random bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac elit ut lorem venenatis bibendum.`,

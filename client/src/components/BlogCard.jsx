@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaRegHeart, FaRegCommentDots } from 'react-icons/fa';
 import { useAppContext } from '../contexts/AppContext';
+import toast from 'react-hot-toast'; // ✅ Toast import
 
 const BlogCard = ({ post }) => {
   const { axios, user, navigate } = useAppContext();
@@ -31,9 +32,13 @@ const BlogCard = ({ post }) => {
       if (response.data.success) {
         setHasLiked(!hasLiked);
         setLikeCount(response.data.totalLikes);
+        toast.success('Like updated'); 
+      } else {
+        toast.error('Failed to update like');
       }
     } catch (error) {
       console.error('Error liking the post:', error);
+      toast.error('Failed to like the post'); 
     }
   };
 
@@ -43,16 +48,23 @@ const BlogCard = ({ post }) => {
         const res = await axios.get(`/api/user/comment/allComments/${_id}`);
         if (res.data.success) {
           setCommentList(res.data.data);
+        } else {
+          toast.error('Failed to load comments'); // ✅ Toast if fetch fails
         }
       } catch (error) {
         console.error('Failed to fetch comments:', error);
+        toast.error('Error fetching comments'); // ✅ Toast on error
       }
     }
     setShowComments(!showComments);
   };
 
   const handleAddComment = async () => {
-    if (!newComment.trim()) return;
+    if (!newComment.trim()) {
+      toast.error('Comment cannot be empty'); // ✅ Toast if comment is empty
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       const res = await axios.post('/api/user/comment/addComment', {
@@ -68,9 +80,13 @@ const BlogCard = ({ post }) => {
         };
         setCommentList([...commentList, commentWithUser]);
         setNewComment('');
+        toast.success('Comment added'); // ✅ Toast on success
+      } else {
+        toast.error('Failed to add comment');
       }
     } catch (error) {
       console.error('Error adding comment:', error);
+      toast.error('Error posting comment'); // ✅ Toast on error
     } finally {
       setIsSubmitting(false);
     }
@@ -119,7 +135,10 @@ const BlogCard = ({ post }) => {
           <p>{date}</p>
         </div>
 
-        <button onClick={()=>navigate(`/post/${_id}`)} className="text-indigo-600 text-sm font-medium hover:underline mt-2 w-fit">
+        <button
+          onClick={() => navigate(`/post/${_id}`)}
+          className="text-indigo-600 text-sm font-medium hover:underline mt-2 w-fit"
+        >
           Read more →
         </button>
 

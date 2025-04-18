@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useAppContext } from "../contexts/AppContext";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddPost = () => {
-  const { axios, navigate,fetchBlogs } = useAppContext();
+  const { axios, navigate, fetchBlogs } = useAppContext();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,26 +12,23 @@ const AddPost = () => {
     e.preventDefault();
 
     if (!title || !content) {
-      toast.error("Please fill in all fields");
+      toast.error("Please fill in all fields", { icon: "⚠️", id: "fill-fields" });
       return;
     }
 
     try {
       setLoading(true);
       const { data } = await axios.post("/api/user/post/addPost", { title, content });
-      console.log(data);
-      
 
       if (data.success) {
-        console.log(data);
         fetchBlogs();
-        toast.success("Post added successfully");
-        navigate("/"); 
+        toast.success("Post added successfully", { icon: "🚀" });
+        navigate("/");
       } else {
-        toast.error(data.message || "Failed to add post");
+        toast.error(data.message || "Failed to add post", { icon: "❌" });
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error("Something went wrong", { icon: "😓" });
       console.error("Add Post Error:", error);
     } finally {
       setLoading(false);
@@ -40,6 +37,7 @@ const AddPost = () => {
 
   return (
     <div className="max-w-2xl mx-auto mt-24 p-6 bg-white shadow-lg rounded-lg">
+      <Toaster position="top-center" reverseOrder={false} />
       <h1 className="text-2xl font-bold mb-6 text-center">Add New Post</h1>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>

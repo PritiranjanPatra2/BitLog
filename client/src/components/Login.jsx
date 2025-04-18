@@ -3,37 +3,53 @@ import { useAppContext } from "../contexts/AppContext";
 import toast from "react-hot-toast";
 
 function Login() {
-  const { setShowUserLogin, fetchBlogs,setUser, fetchUser,axios, navigate,fetchAllUser } = useAppContext();
+  const {
+    setShowUserLogin,
+    fetchBlogs,
+    setUser,
+    fetchUser,
+    axios,
+    navigate,
+    fetchAllUser,
+  } = useAppContext();
+  
   const [state, setState] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [bio,setBio]=useState("");
+  const [bio, setBio] = useState("");
   const [password, setPassword] = useState("");
+
   const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    // Show loading toast
+    const loadingToast = toast.loading(
+      state === "register" ? "Creating account..." : "Logging in..."
+    );
+
     try {
-      e.preventDefault();
       const { data } = await axios.post(`/api/user/${state}`, {
-        name: name,
-        email: email,
-        bio:bio,
-        password: password,
+        name,
+        email,
+        bio,
+        password,
       });
-      console.log(name, email, password);
 
       if (data.success) {
-        toast.success(data.message);
-        navigate("/");
-        fetchAllUser()
-        fetchBlogs()
-        fetchUser()
+        toast.success(data.message || "Success", { id: loadingToast });
         setUser(data.user);
-        setShowUserLogin(true);
-        console.log(data);
+        fetchAllUser();
+        fetchBlogs();
+        fetchUser();
+        navigate("/");
+        setShowUserLogin(false);
       } else {
-        toast.error(data.message);
+        toast.error(data.message || "Something went wrong", { id: loadingToast });
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.response?.data?.message || error.message || "Login failed", {
+        id: loadingToast,
+      });
     }
   };
 
@@ -51,6 +67,7 @@ function Login() {
           <span className="text-black">User</span>{" "}
           {state === "login" ? "Login" : "Sign Up"}
         </p>
+
         {state === "register" && (
           <div className="w-full">
             <p>Name</p>
@@ -62,21 +79,19 @@ function Login() {
               type="text"
               required
             />
-             <p>Bio</p>
-          <input
-            onChange={(e) => setBio(e.target.value)}
-            value={bio}
-            placeholder="type here"
-            className="border border-gray-200 rounded w-full p-2 mt-1 outline-black"
-            type="text"
-            required
-          />
+            <p>Bio</p>
+            <input
+              onChange={(e) => setBio(e.target.value)}
+              value={bio}
+              placeholder="type here"
+              className="border border-gray-200 rounded w-full p-2 mt-1 outline-black"
+              type="text"
+              required
+            />
           </div>
-          
-          
         )}
-        
-        <div className="w-full ">
+
+        <div className="w-full">
           <p>Email</p>
           <input
             onChange={(e) => setEmail(e.target.value)}
@@ -87,7 +102,7 @@ function Login() {
             required
           />
         </div>
-        <div className="w-full ">
+        <div className="w-full">
           <p>Password</p>
           <input
             onChange={(e) => setPassword(e.target.value)}
@@ -98,9 +113,10 @@ function Login() {
             required
           />
         </div>
+
         {state === "register" ? (
           <p>
-            Already have account?{" "}
+            Already have an account?{" "}
             <span
               onClick={() => setState("login")}
               className="text-black cursor-pointer"
@@ -119,6 +135,7 @@ function Login() {
             </span>
           </p>
         )}
+
         <button className="bg-black hover:bg-black-dull transition-all text-white w-full py-2 rounded-md cursor-pointer">
           {state === "register" ? "Create Account" : "Login"}
         </button>

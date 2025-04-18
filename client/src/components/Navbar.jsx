@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { navigate, user,fetchBlogs,fetchUser, setUser, axios } = useAppContext();
+  const { navigate, user, setUser, axios } = useAppContext();
 
   const handleLogout = async () => {
     try {
@@ -13,11 +13,13 @@ const Navbar = () => {
       if (data.success) {
         setUser(null);
         navigate("/");
+        toast.success("Successfully logged out!");
       } else {
         toast.error(data.message);
       }
     } catch (error) {
       console.error("Logout error:", error);
+      toast.error("Error logging out. Please try again.");
     }
   };
 

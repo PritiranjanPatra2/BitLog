@@ -4,7 +4,7 @@ import { useAppContext } from "../contexts/AppContext";
 function UserList() {
   const { allUser,navigate } = useAppContext();
 
-  // Generate a random avatar URL based on index
+
   const getRandomAvatar = (index) => `https://i.pravatar.cc/150?img=${(index % 70) + 1}`;
 
   return (
